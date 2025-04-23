@@ -34,3 +34,10 @@ func _iter_get(iter: Variant) -> Variant:
 	return null;
 
 #endregion Implements interfaces
+
+#region Extension methods
+
+func select(selector: Callable) -> SelectIterator:
+	return SelectIterator.new(self, selector);
+
+#endregion Extension methods
