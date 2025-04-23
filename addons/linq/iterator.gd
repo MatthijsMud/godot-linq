@@ -40,4 +40,7 @@ func _iter_get(iter: Variant) -> Variant:
 func select(selector: Callable) -> SelectIterator:
 	return SelectIterator.new(self, selector);
 
+func where(predicate: Callable) -> WhereIterator:
+	return WhereIterator.new(self, predicate);
+
 #endregion Extension methods
