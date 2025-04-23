@@ -40,6 +40,9 @@ func _iter_get(iter: Variant) -> Variant:
 func select(selector: Callable) -> SelectIterator:
 	return SelectIterator.new(self, selector);
 
+func select_many(collection_selector: Callable, result_selector: Callable = Callable()) -> SelectManyIterator:
+	return SelectManyIterator.new(self, collection_selector, result_selector);
+
 func where(predicate: Callable) -> WhereIterator:
 	return WhereIterator.new(self, predicate);
 
