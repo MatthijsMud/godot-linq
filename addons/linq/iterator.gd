@@ -46,4 +46,7 @@ func select_many(collection_selector: Callable, result_selector: Callable = Call
 func where(predicate: Callable) -> WhereIterator:
 	return WhereIterator.new(self, predicate);
 
+func zip(other: Variant) -> ZipIterator:
+	return ZipIterator.new(self, Iterator.from(other));
+
 #endregion Extension methods
