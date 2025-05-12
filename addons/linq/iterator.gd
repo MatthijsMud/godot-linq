@@ -39,6 +39,21 @@ func _iter_get(iter: Variant) -> Variant:
 
 #region Extension methods
 
+## Counts elements for which [param predicate] returns [code]true[/code]. If no
+## [param predicate] has been provided, all elements are counted.[br][br]
+##
+## [param predicate] has the following signature:
+## [codeblock]
+## func predicate(value: Variant) -> bool
+## [/codeblock]
+func count(predicate: Callable = Callable()) -> int:
+	var count := 0;
+	for element in self:
+		if not predicate.is_valid() or predicate.call(element):
+			count += 1;
+			
+	return count;
+
 func select(selector: Callable) -> SelectIterator:
 	return SelectIterator.new(self, selector);
 
