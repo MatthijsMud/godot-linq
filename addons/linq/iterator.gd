@@ -57,6 +57,25 @@ func all(predicate: Callable) -> bool:
 		if not predicate.call(value):
 			return false;
 	return true;
+
+## Returns [code]true[/code] if [param predicate] returns [code]true[/code] for 
+## at least one element in the sequence. It stops as soon as the result can
+## be determined.[br][br]
+##
+## [param predicate] has the following signature:
+## [codeblock]
+## func predicate(value: Variant) -> bool
+## [/codeblock]
+##
+## If [param predicate] is not provided, it assumes all elements would return
+## [code]true[/code]. In other words: the sequence contains 1 or more elements.
+func any(predicate: Callable = Callable()) -> bool:
+	for element in self:
+		if not predicate.is_valid() or predicate.call(element):
+			return true;
+		
+	return false;
+
 ## Counts elements for which [param predicate] returns [code]true[/code]. If no
 ## [param predicate] has been provided, all elements are counted.[br][br]
 ##
