@@ -22,8 +22,6 @@ Wraps the provided iterable object in a suitable [`Iterator`] to allow for easy 
 
 If the provided value is already an [`Iterator`], the provided value is returned instead (to avoid excessive wrapping). 
 
-
-
 #### Parameters
 
 <dl>
@@ -54,21 +52,110 @@ Returns `true` if `predicate` returns `true` for each element in the sequence, o
 
 Stops as soon as any invocation returns `false`.
 
-### Parameters
+Counterpart to [`Array.all`].
+
+#### Parameters
 
 <dl>
 <dt><dfn>predicate</dfn></dt>
 <dd>
+
 ```gdscript
 func predicate(element: Variant) -> bool
 ```
 </dd>
 </dl>
 
+#### Example
+
+```gdscript
+var source := Iterator.from([0,1,2,3,4]);
+var result := source.all(func is_even(e): print(e); return e % 2 == 0);
+print("Result: ", result);
+```
+
+```
+0
+1
+Result: false
+```
+The second element in the above example does not satisfy the `predicate`. It will therefore not continue to check any further elements.
+
+### `any(…)`
+```gdscript
+func any() -> bool
+func any(predicate: Callable) -> bool
+```
+
+Returns `true` if `predicate` returns `true` for 
+at least one element in the sequence. It stops as soon as the result can
+be determined.
+
+Counterpart to [`Array.any`].
+
+#### Parameters
+
+<dl>
+<dt><dfn>predicate</dfn></dt>
+<dd>
+
+```gdscript
+func predicate(element: Variant) -> bool
+```
+</dd>
+</dl>
+
+#### Example
+```gdscript
+var source := Iterator.from(range(10));
+print(source.any(func is_large(e): return e > 1000))
+```
+
+```
+false
+```
+
+### `count(…)`
+```gdscript
+func count() -> int
+func count(predicate: Callable) -> int
+```
+Counts elements for which `predicate` returns `true`. If no `predicate` has been provided, all elements are counted.
+
+> [!NOTE]
+> The elements are counted by iterating over the entire sequence, irrespective of whether a `predicate` has been provided. This is ineffecient in cases where the size can be determined directly.
+
+Specialized counterpart to [`Array.reduce`].
+
+#### Parameters
+
+<dl>
+<dt><dfn>predicate</dfn></dt>
+<dd>
+
+```gdscript
+func predicate(element: Variant) -> bool
+```
+Callback which determines whether the element should be counted (`true`).
+
+It is assumed this method has no side-effects.
+</dd>
+</dl>
+
+#### Example
+```gdscript
+var source := Iterator.from([1,1,2,3,5,8,13,21]);
+print(source.count(func is_even(e): return e % 2 == 0))
+```
+
+```
+2
+```
+
 ### `select(…)`
 
 ```gdscript
-func select(selector: Callable)
+func select(selector: Callable) -> Iterator
 ```
 Creates a new [`Iterator`] where each value is the result of calling `selector` with the corresponding element in the source (and optionally its index). 
 
@@ -109,8 +196,8 @@ for e in source.select(func squared(e) return e * e):
 ### `select_many(…)`
 
 ```gdscript
-func select_many(collection_selector: Callable)
-func select_many(collection_selector: Callable, result_selector: Callable)
+func select_many(collection_selector: Callable) -> Iterator
+func select_many(collection_selector: Callable, result_selector: Callable) -> Iterator
 ```
 Creates a new [`Iterator`] that iterates over the result of calling `collection_selector` with the current element until it exhausted 
 Iterate over the [`Iterator`] returned by calling `collection_selector` for elements in the source.
@@ -169,7 +256,7 @@ for e in source.select_many(func(e): return e):
 
 ### `where(…)`
 ```gdscript
-func where(predicate: Callable)
+func where(predicate: Callable) -> Iterator
 ```
 
 Creates a new [`Iterator`] that is a subset of its source. It only contains elements for which `predicate` returned `true`.
@@ -205,7 +292,7 @@ for e in source.where(func is_even(e): return e % 2 == 0):
 8
 ```
 
-### `Zip(…)`
+### `zip(…)`
 
 ```gdscript
 func zip(other: Iterator) -> Iterator
@@ -245,6 +332,10 @@ Note that `4` and `5` are not iterated, as the `other` source has no more elemen
 [`from`]: #from
 
 [`range`]: https://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-method-range
+[`Array.all`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-all
+[`Array.any`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-any
+[`Array.count`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-count
+[`Array.reduce`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-reduce
 [`Array.map`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-map
 [`Array.filter`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-filter
 
