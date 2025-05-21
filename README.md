@@ -37,13 +37,33 @@ While Godot does allow [implementing custom iterators][custom_iterator], it does
 An implementation has been provided for:
 
 - `Array` or any of the `Packed…Array` types
-- ~~`Dictionary` each entry is represented as an array with 2 elements: `[key, value]`~~
+- `Dictionary` each entry is represented as an array with 2 elements: `[key, value]`
 - [`Iterator`]
 
 </dd>
 </dl>
 
 ## Instance methods
+
+### `all(…)`
+```gdscript
+func all(predicate: Callable) -> bool
+```
+
+Returns `true` if `predicate` returns `true` for each element in the sequence, or if the sequence is empty.
+
+Stops as soon as any invocation returns `false`.
+
+### Parameters
+
+<dl>
+<dt><dfn>predicate</dfn></dt>
+<dd>
+```gdscript
+func predicate(element: Variant) -> bool
+```
+</dd>
+</dl>
 
 ### `select(…)`
 
@@ -121,7 +141,8 @@ func result_selector(source: Variant, element: Variant) -> Variant
 ```
 Callback which allows transforming the `element`. This is similar to chaining [`select`], but in this case the `source` is also provided, which allows for setting up references. 
 
-> [!NOTE] The first argument is the same element as provided to `collection_selector`. 
+> [!NOTE] 
+> The first argument is the same element as provided to `collection_selector`. 
 
 The default implementation (if this callback is omited) returns `element`.
 
