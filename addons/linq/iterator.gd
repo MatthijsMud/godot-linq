@@ -20,9 +20,14 @@ static func from(value: Variant) -> Iterator:
 		TYPE_DICTIONARY:
 			return DictionaryIterator.new(value);
 		var type:
-			# TODO: Add support for more types which can be iterated.
 			assert(false, "[Iterator.from()] does not support type [{type}]".format({ "type": type_string(type) }));
-	return null;
+	return empty();
+
+## Returns an [Iterator] that does [b]not[/b] yield any elements.
+##
+## Use in place of [code]null[/code]
+static func empty() -> Iterator:
+	return Iterator.new();
 
 #region Implements interfaces
 
@@ -39,6 +44,19 @@ func _iter_get(iter: Variant) -> Variant:
 
 #region Extension methods
 
+## Returns [code]true[/code] if [param predicate] returns [code]true[/code] for each element in the sequence.
+##
+## Stops as soon as any invocation returns [code]false[/code].[br][br]
+##
+## [param predicate] has the following signature.
+## [codeblock]
+## func predicate(value: Variant) -> bool
+## [/codeblock]
+func all(predicate: Callable) -> bool:
+	for value in self:
+		if not predicate.call(value):
+			return false;
+	return true;
 ## Counts elements for which [param predicate] returns [code]true[/code]. If no
 ## [param predicate] has been provided, all elements are counted.[br][br]
 ##
