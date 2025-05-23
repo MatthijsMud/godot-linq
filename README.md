@@ -41,6 +41,43 @@ An implementation has been provided for:
 </dd>
 </dl>
 
+### `repeat(…)`
+```gdscript
+func repeat(element: Variant, count: int) -> Iterator
+```
+
+Repeats the provided `element` the specified number of times.
+
+Lazy counterpart to calling [`Array.resize`] followed by [`Array.fill`].
+
+#### Parameters
+
+<dl>
+<dt><dfn>element</dfn></dt>
+<dd>
+The element to repeat.
+<dd>
+<dt><dfn>count</dfn></dt>
+<dd>
+Number of times the provided `element` should be repeated. Value should be positive.
+</dd>
+</dl>
+
+#### Example
+```gdscript
+var source := Iterator.repeat("Hello", 5);
+for element in source: 
+  print(element);
+```
+
+```
+Hello
+Hello
+Hello
+Hello
+Hello
+```
+
 ## Instance methods
 
 ### `all(…)`
