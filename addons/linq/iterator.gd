@@ -1,11 +1,6 @@
 ## Represents the concept of a sequence which can be transformed and iterated lazily.
 class_name Iterator extends RefCounted
 
-## Used as default value in methods with overloads where one argument could be
-## anything. It is treated as not providing a value.
-static func UNDEFINED() -> void: 
-	push_error("[Iterator.UNDEFINED()] should not be invoked.");
-
 ## Wraps the provided iterable object in a suitable [Iterator] to allow for easy 
 ## chaining of various operations on sequences.[br][br]
 ##
@@ -105,25 +100,13 @@ func any(predicate: Callable = Callable()) -> bool:
 ## [codeblock]
 ## func predicate(value: Variant) -> bool
 ## [/codeblock]
-func count(predicate: Callable = UNDEFINED) -> int:
+func count(predicate: Callable = Callable()) -> int:
 	var count := 0;
 	for element in self:
-		if is_same(predicate, UNDEFINED) or predicate.call(element):
+		if not predicate.is_valid() or predicate.call(element):
 			count += 1;
 			
 	return count;
-
-## Returns the default value for the supposed type.
-func default_if_empty() -> Iterator:
-	if not _iter_init([null]):
-		return ArrayIterator.new([_default()]);
-	return self;
-
-func first() -> Variant:
-	return FirstIterator.first(self);
-	
-func first_or_default(default: Variant = UNDEFINED) -> Variant:
-	return FirstIterator.first_or_default(self, default);
 
 ## Creates a new [Iterator] where each value is the result of calling [param selector]
 ## with the corresponding element in the source (and optionally its index).[br][br]
@@ -156,7 +139,7 @@ func select(selector: Callable) -> SelectIterator:
 ## Callback which allows transforming the element. This is similar to chaining 
 ## [method select], but in this case the source is also provided, which allows for setting up references.
 ## The default implementation (if this callback is omited) returns [param element].
-func select_many(collection_selector: Callable, result_selector: Callable = UNDEFINED) -> SelectManyIterator:
+func select_many(collection_selector: Callable, result_selector: Callable = Callable()) -> SelectManyIterator:
 	return SelectManyIterator.new(self, collection_selector, result_selector);
 
 ## Constructs an [Array] containing all elements in this [Iterator].
@@ -189,11 +172,3 @@ func zip(other: Variant) -> ZipIterator:
 	return ZipIterator.new(self, Iterator.from(other));
 
 #endregion Extension methods
-
-## Virtual method for generating a default value based on the type of data this 
-## iterator yields.
-##
-## Used internally by methods like [method default_if_empty], [method first_or_default], 
-## [method single_or_default].
-func _default() -> Variant:
-	return null;
