@@ -33,6 +33,10 @@ func _iter_get(iter: Variant) -> Variant:
 	var state := iter as State;
 	var current := super(state.source_iterator_state[0]);
 	return _selector.call(current, state.index);
+	
+func _default() -> Variant:
+	push_warning("[SelectIterator] always returns [null] as default value because [selector]'s return type cannot be determined.");
+	return null;
 
 class State extends RefCounted:
 	var source_iterator_state := [null];

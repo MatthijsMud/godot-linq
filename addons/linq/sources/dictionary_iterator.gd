@@ -21,6 +21,14 @@ func _iter_get(iter: Variant) -> Variant:
 	var key := state.key_iterator._iter_get(state.key_iterator_state[0]);
 	return [key, _source.get(key)];
 
+## Returns an [Array] with two elements with the default values of respectively
+## the key's type and the value's type.
+func _default() -> Variant:
+	return [
+		type_convert(null, _source.get_typed_key_builtin()),
+		type_convert(null, _source.get_typed_value_builtin())
+	];
+
 class State extends RefCounted:
 	var key_iterator: Iterator;
 	var key_iterator_state := [null];

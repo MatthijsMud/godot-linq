@@ -114,3 +114,11 @@ func zip(other: Variant) -> ZipIterator:
 	return ZipIterator.new(self, Iterator.from(other));
 
 #endregion Extension methods
+
+## Virtual method for generating a default value based on the type of data this 
+## iterator yields.
+##
+## Used internally by methods like [method default_if_empty], [method first_or_default], 
+## [method single_or_default].
+func _default() -> Variant:
+	return null;

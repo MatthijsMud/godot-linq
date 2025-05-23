@@ -83,6 +83,10 @@ func _iter_get(iter: Variant) -> Variant:
 	var current := state.sub_collection_iterator._iter_get(state.sub_collection_iterator_state[0]);
 	return _result_selector.call(state.source_element, current);
 
+func _default() -> Variant:
+	push_warning("[SelectManyIterator] always returns [null] because [selector]s'return type cannot be determined.");
+	return null;
+
 static func _default_result_selector(source: Variant, element: Variant) -> Variant:
 	return element;
 
