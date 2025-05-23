@@ -36,13 +36,7 @@ An implementation has been provided for:
 
 - `Array` or any of the `Packed…Array` types
 - `Dictionary` each entry is represented as an array with 2 elements: `[key, value]`
-- [`Iterator`] (returns the object itself)
-- A [custom iterator](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_advanced.html#custom-iterators) (a type implementing the methods [`_iter_init`], [`_iter_next`] and [`_iter_get`].)
-  ```gdscript
-  func _iter_init(iter: Array) -> bool: return false;
-  func _iter_next(iter: Array) -> bool: return false;
-  func _iter_get(iter: Variant) -> Variant: return null;
-  ```
+- [`Iterator`]
 
 </dd>
 </dl>
@@ -375,9 +369,6 @@ Note that `4` and `5` are not iterated, as the `other` source has no more elemen
 [`from`]: #from
 
 [`range`]: https://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-method-range
-[`_iter_init`]: https://docs.godotengine.org/en/stable/classes/class_object.html#class-object-private-method-iter-init
-[`_iter_next`]: https://docs.godotengine.org/en/stable/classes/class_object.html#class-object-private-method-iter-next
-[`_iter_get`]: https://docs.godotengine.org/en/stable/classes/class_object.html#class-object-private-method-iter-get
 [`Array.all`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-all
 [`Array.any`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-any
 [`Array.count`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-count
