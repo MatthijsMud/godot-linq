@@ -1,5 +1,10 @@
 class_name Iterator extends RefCounted
 
+## Used as default value in methods with overloads where one argument could be
+## anything. It is treated as not providing a value.
+static func UNDEFINED() -> void:
+	push_error("[Iterator.UNDEFINED()] should not be invoked!");
+
 static func from(value: Variant) -> Iterator:
 	match typeof(value):
 		TYPE_OBJECT:
@@ -79,9 +84,9 @@ func all(predicate: Callable) -> bool:
 ##
 ## If [param predicate] is not provided, it assumes all elements would return
 ## [code]true[/code]. In other words: the sequence contains 1 or more elements.
-func any(predicate: Callable = Callable()) -> bool:
+func any(predicate: Callable = UNDEFINED) -> bool:
 	for element in self:
-		if not predicate.is_valid() or predicate.call(element):
+		if is_same(predicate, UNDEFINED) or predicate.call(element):
 			return true;
 		
 	return false;
@@ -93,10 +98,10 @@ func any(predicate: Callable = Callable()) -> bool:
 ## [codeblock]
 ## func predicate(value: Variant) -> bool
 ## [/codeblock]
-func count(predicate: Callable = Callable()) -> int:
+func count(predicate: Callable = UNDEFINED) -> int:
 	var count := 0;
 	for element in self:
-		if not predicate.is_valid() or predicate.call(element):
+		if is_same(predicate, UNDEFINED) or predicate.call(element):
 			count += 1;
 			
 	return count;
@@ -104,7 +109,7 @@ func count(predicate: Callable = Callable()) -> int:
 func select(selector: Callable) -> SelectIterator:
 	return SelectIterator.new(self, selector);
 
-func select_many(collection_selector: Callable, result_selector: Callable = Callable()) -> SelectManyIterator:
+func select_many(collection_selector: Callable, result_selector: Callable = UNDEFINED) -> SelectManyIterator:
 	return SelectManyIterator.new(self, collection_selector, result_selector);
 
 func where(predicate: Callable) -> WhereIterator:
