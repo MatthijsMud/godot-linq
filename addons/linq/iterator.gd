@@ -29,6 +29,16 @@ static func from(value: Variant) -> Iterator:
 static func empty() -> Iterator:
 	return Iterator.new();
 
+## Returns an [Iterator] that yields the provided [param element] a number
+## of times equal to [param count].
+##
+## [codeblock]
+## Iterator.repeat("Hello", 5).to_array();
+## ["Hello", "Hello", "Hello", "Hello", "Hello"]
+## [/codeblock]
+static func repeat(element: Variant, count: int) -> RepeatIterator:
+	return RepeatIterator.new(element, count);
+
 #region Implements interfaces
 
 func _iter_init(iter: Array) -> bool:
