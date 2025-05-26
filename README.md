@@ -189,6 +189,54 @@ print(source.count(func is_even(e): return e % 2 == 0))
 2
 ```
 
+### `of_type(…)`
+```gdscript
+func of_type(type: Variant.Type) -> Iterator
+func of_type(type: StringName) -> Iterator
+func of_type(type: Script) -> Iterator
+```
+
+Creates a new [`Iterator`] which only contains the elements of its source that are of the specified `type`.
+
+> [!WARNING]
+> This method does not support passing built-in class names as the type parameter. Use a `StringName` instead. 
+> ```gdscript
+> -  source.of_type(Node2D)
+> +  source.of_type(&"Node2D")
+> ```
+> <details>
+> <summary>Reasoning</summary>
+> 
+> The type descriptor for Godot's builtin type extends a class that is neither exposed to GdScript nor documented; limiting what can reliably be done with it.
+> </details>
+
+#### Parameters
+
+<dl>
+<dt><dfn>type</dfn><dt>
+<dd>
+
+The type all element in the result will have. Any elements that do **not** have the specified type are filtered out. 
+- `Variant.Type` for the primitve types.
+- `StringName` of a built-in types extending `Object`.
+- `Script` for any classes defined in GdScript or C#.
+</dd>
+</dl>
+
+#### Example
+
+```gdscript
+extends Container
+
+func _notification(what: int) -> void:
+  if what == NOTIFICATION_SORT_CHILDREN:
+    var rect := Rect2(Vector2.ZERO, size);
+    for child in Iterator.from(get_children()).of_type(&"Control"):
+      fit_child_in_rect(child, rect);
+
+```
+
+
 ### `select(…)`
 
 ```gdscript
