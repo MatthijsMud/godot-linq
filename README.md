@@ -189,6 +189,99 @@ print(source.count(func is_even(e): return e % 2 == 0))
 2
 ```
 
+### `first(…)`
+```gdscript
+func first() -> Variant
+func first(predicate: Callable) -> Variant
+```
+
+Returns the first element for which `predicate` returns `true`. It is an error if no such element exists.
+
+#### Parameters
+
+<dl>
+<dt><dfn>predicate</dfn></dt>
+<dd>
+
+Callback which indicates whether this is the first element that satisfies the constraints (`true`), or whether it should be ignored (`false`).
+</dd>
+</dl>
+
+#### Example
+
+```gdscript
+var source := Iterator.from(["Alpha", "Bravo", "Charlie", "Delta"]);
+print(source.first_or_default(func(e): return e.begins_with("C")));
+```
+
+```
+Charlie
+```
+
+### `first_or_default(…)`
+```gdscript
+func first_or_default() -> Variant
+func first_or_default(default: Variant) -> Variant
+func first_or_default(predicate: Callable) -> Variant
+func first_or_default(predicate: Callable, default: Variant) -> Variant
+```
+
+Returns the first element for which `predicate` returns `true`, or `default` if no element satisfies the constraints.
+
+> [!WARNING]
+> This method does not know whether `predicate` or `default` was intended when called with a [`Callable`] as its only parameter. Given all other cases expect it to be `predicate`, it assumes the provided callback to be `predicate`. If it is intended to be the default value, use a work around instead.
+>
+> - Using thew overload taking both a `predicate` and `default` value.
+>   ```gdscript
+>   source.first_or_default(Iterator.UNDEFINED, func custom_default(): pass);
+>   ```
+>
+> - Wrapping the [`Callable`] and unwrapping the result.
+>   ```gdscript
+>   var callback = source\
+>     .select(func wrap_in_an_array(element): return [element])\
+>     .first_or_default([func custom_default(): pass])[0];
+>   ```
+> 
+> If you do not know in advance whether the default value will be a `Callable` or not, it is recommended to use one of the above work arounds.
+
+#### Parameters
+
+<dl>
+<dt><dfn>predicate</dfn></dt>
+<dd>
+
+```gdscript
+func predicate(element: Variant) -> bool
+```
+
+Callback which indicates whether this is the first element that satisfies the constraints (`true`), or whether it should be ignored (`false`).
+</dd>
+<dt><dfn>default</dfn></dt>
+<dd>
+
+Value to return if the source does **not** contain any elements (for which `predicate` returns `true`). If omitted, a default value is generated based on the type associated with the [`Iterator`].
+
+```gdscript
+type_convert(null, type)
+```
+
+> [!NOTE]
+> Godot passes some types by value where C# would pass them by reference. As such some types might have a different default value, for example `Arrays`: `null` in C#, `[]` in Godot.
+</dd>
+</dl>
+
+#### Example
+
+```gdscript
+var source := Iterator.empty();
+print(source.first_or_default());
+```
+
+```
+<null>
+```
+
 ### `of_type(…)`
 ```gdscript
 func of_type(type: Variant.Type) -> Iterator
@@ -236,7 +329,6 @@ func _notification(what: int) -> void:
 
 ```
 
-
 ### `select(…)`
 
 ```gdscript
@@ -245,6 +337,9 @@ func select(selector: Callable) -> Iterator
 Creates a new [`Iterator`] where each value is the result of calling `selector` with the corresponding element in the source (and optionally its index). 
 
 Lazy counterpart to [`Array.map`].
+
+> [!WARNING]
+> This method loses type information, unlike [System.Linq]. As a result the various `…_or_default()` methods will return `null` if no custom default value is provided.
 
 #### Parameters
 
@@ -288,6 +383,9 @@ Creates a new [`Iterator`] that iterates over the result of calling `collection_
 Iterate over the [`Iterator`] returned by calling `collection_selector` for elements in the source.
 
 Does not have a Godot counterpart.
+
+> [!WARNING]
+> This method loses type information, unlike [System.Linq]. As a result the various `…_or_default()` methods will return `null` if no custom default value is provided.
 
 #### Parameters
 
