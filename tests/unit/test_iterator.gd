@@ -1,3 +1,8 @@
+## Tests for various methods that are available on [Iterator].
+##
+## Most of these tests use [ChainedIterator] despite the methods being defined
+## on [Iterator]. This to allow working with a sequence controlled by the test,
+## rather than the empty sequence a plain [Iterator] represents.
 extends GutTest
 
 class TestAll extends GutTest:
@@ -128,10 +133,80 @@ class TestCount extends GutTest:
 		var MockedIterator = double(Iterator);
 		var mock = MockedIterator.new();
 		stub(mock, &"_iter_init").to_call(func(iter): iter[0] = 0; return iter[0] < len(sequence));
-		stub(mock, &"_iter_next").to_call(func(iter):print(iter); iter[0] += 1; return iter[0] < len(sequence));
+		stub(mock, &"_iter_next").to_call(func(iter): iter[0] += 1; return iter[0] < len(sequence));
 		stub(mock, &"_iter_get").to_call(func(iter): return sequence[iter]);
 		var subject := ChainedIterator.new(mock);
 		
 		var result := subject.count(func(e): return e);
 		
 		assert_eq(result, expected_return_value);
+
+class TestFirst extends GutTest:
+	
+	const cases_with_implicit_default := [
+		[[], null],
+		[[false], false],
+	]
+	
+	func test_without_predicate(params = use_parameters(cases_with_implicit_default)):
+		var sequence := params[0] as Array;
+		var expected_return_value: Variant = params[1];
+		
+		var MockedIterator = double(Iterator);
+		var mock = MockedIterator.new();
+		stub(mock, &"_iter_init").to_call(func(iter): iter[0] = 0; return iter[0] < len(sequence));
+		stub(mock, &"_iter_next").to_call(func(iter): iter[0] += 1; return iter[0] < len(sequence));
+		stub(mock, &"_iter_get").to_call(func(iter): return sequence[iter]);
+		var subject := ChainedIterator.new(mock);
+		
+		var result = subject.first();
+		
+		assert_eq(result, expected_return_value);
+		assert_call_count(mock, &"_default", 0);
+
+class TestFirstOrDefault extends GutTest:
+	
+	const cases_with_implicit_default := [
+		[[], 10, 10],
+		[[false], true, false],
+	]
+	
+	func test_without_default(params = use_parameters(cases_with_implicit_default)):
+		var sequence := params[0] as Array;
+		var implicit_default: Variant = params[1];
+		var expected_return_value: Variant = params[2];
+		
+		var MockedIterator = double(Iterator);
+		var mock = MockedIterator.new();
+		stub(mock, &"_iter_init").to_call(func(iter): iter[0] = 0; return iter[0] < len(sequence));
+		stub(mock, &"_iter_next").to_call(func(iter): iter[0] += 1; return iter[0] < len(sequence));
+		stub(mock, &"_iter_get").to_call(func(iter): return sequence[iter]);
+		stub(mock, &"_default").to_return(implicit_default);
+		var subject := ChainedIterator.new(mock);
+		
+		var result = subject.first_or_default();
+		
+		assert_eq(result, expected_return_value);
+		assert_call_count(mock, &"_default", 1);
+	
+	const cases_with_explicit_default := [
+		[["Hello", "World!"], "Bye!", "Hello"],
+		[[false], true, false],
+	]
+	
+	func test_with_default(params = use_parameters(cases_with_explicit_default)):
+		var sequence := params[0] as Array;
+		var default: Variant = params[1];
+		var expected_return_value: Variant = params[2];
+		
+		var MockedIterator = double(Iterator);
+		var mock = MockedIterator.new();
+		stub(mock, &"_iter_init").to_call(func(iter): iter[0] = 0; return iter[0] < len(sequence));
+		stub(mock, &"_iter_next").to_call(func(iter): iter[0] += 1; return iter[0] < len(sequence));
+		stub(mock, &"_iter_get").to_call(func(iter): return sequence[iter]);
+		var subject := ChainedIterator.new(mock);
+		
+		var result = subject.first_or_default(default);
+		
+		assert_eq(result, expected_return_value);
+		assert_call_count(mock, &"_default", 0);

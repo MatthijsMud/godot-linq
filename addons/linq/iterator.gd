@@ -106,6 +106,58 @@ func count(predicate: Callable = UNDEFINED) -> int:
 			
 	return count;
 
+## Returns the first element for which [param predicate] returns [code]true[/code].[br][br]
+##
+## [param predicate] has the following signature.
+## [codeblock]
+## func predicate(element: Variant) -> bool
+## [/codeblock]
+func first(predicate: Callable = UNDEFINED) -> Variant:
+	if is_same(predicate, UNDEFINED):
+		predicate = func(_e): return true;
+		
+	for element in self:
+		if predicate.call(element):
+			return element;
+	
+	push_error("[Iterator] cannot access [first()] because it is empty.");
+	return null;
+
+## Returns the first element for which [param predicate] returns [code]true[/code], 
+## or [param default] if no element satisfies the constraints.[br][br]
+##
+## [param predicate] has the following signature.
+## [codeblock]
+## func predicate(element: Variant) -> bool
+## [/codeblock]
+func first_or_default(predicate_or_default: Variant = UNDEFINED, default: Variant = UNDEFINED) -> Variant:
+	var predicate: Callable = UNDEFINED;
+	# Determine which overload is invoked.
+	match [typeof(predicate_or_default), not is_same(default, UNDEFINED)]:
+		# Represents `func first_or_default(predicate)`
+		[TYPE_CALLABLE, false]: 
+			predicate = predicate_or_default;
+			default = _default();
+			print_verbose("[Iterator] assumes provided callback is [param predicate]");
+		# Represents `func first_or_default(predicate, default)`
+		[TYPE_CALLABLE, true]:
+			predicate = predicate_or_default;
+			# [default] already has the correct value.
+		# Represents `func first_or_default(default)`
+		[_, false]: 
+			default = predicate_or_default;
+		_: 
+			push_error("[Iterator] requires first parameter to be a [Callable] if a default value is provided.");
+			return default;
+	
+	if is_same(predicate, UNDEFINED):
+		predicate = func(_e): return true;
+	
+	for element in self:
+		if predicate.call(element):
+			return element;
+	
+	return default;
 func select(selector: Callable) -> SelectIterator:
 	return SelectIterator.new(self, selector);
 
