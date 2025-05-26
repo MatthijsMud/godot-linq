@@ -203,6 +203,10 @@ Returns the first element for which `predicate` returns `true`. It is an error i
 <dt><dfn>predicate</dfn></dt>
 <dd>
 
+```gdscript
+func predicate(element: Variant) -> bool
+```
+
 Callback which indicates whether this is the first element that satisfies the constraints (`true`), or whether it should be ignored (`false`).
 </dd>
 </dl>
