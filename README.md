@@ -152,6 +152,35 @@ print(source.any(func is_large(e): return e > 1000))
 false
 ```
 
+
+### `contains(…)`
+```gdscript
+func contains(value: Variant) -> bool
+func contains(value: Variant, comparer: Callable) -> bool
+```
+
+Returns `true` if the provided `value` is present in this [`Iterator`].
+
+#### Parameters
+
+<dl>
+<dt><dfn>value</dfn></dt>
+<dd>
+
+Value to look for in the [`Iterator`].
+</dd>
+<dt><dfn>comparer</dfn></dt>
+<dd>
+
+```gdscript
+func comparer(left: Variant, right: Variant) -> bool
+```
+Callback which should return `true` if `left` and `right` are considered equal (`false` otherwise).
+
+If this value is omitted, `is_same` is used to determine whether the provided `value` is in the sequence.
+</dd>
+</dl>
+
 ### `count(…)`
 ```gdscript
 func count() -> int
