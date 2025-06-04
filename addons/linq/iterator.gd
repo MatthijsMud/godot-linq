@@ -90,6 +90,14 @@ func any(predicate: Callable = UNDEFINED) -> bool:
 			return true;
 		
 	return false;
+	
+## Returns [code]true[/code] if the provided [param value] is present in this [Iterator].
+func contains(value: Variant, comparer: Callable = UNDEFINED) -> bool:
+	comparer = comparer if not is_same(comparer, UNDEFINED) else is_same;
+	for element in self:
+		if comparer.call(element, value):
+			return true;
+	return false;
 
 ## Counts elements for which [param predicate] returns [code]true[/code]. If no
 ## [param predicate] has been provided, all elements are counted.[br][br]

@@ -96,6 +96,38 @@ class TestAny extends GutTest:
 		assert_call_count(mock, &"_iter_next", expected_number_of_evaluations.get("next"));
 		assert_call_count(mock, &"_iter_get", expected_number_of_evaluations.get("get"));
 
+class TestContains extends GutTest:
+	
+	const cases := [
+		# [0]: Source.
+		# [1]: Array describing which elements to pick from the source.
+		# [2]: Index of element to look for. Work around for reference types.
+		# [3]: Expected return value.
+		[[null], [], 0, false],
+		[["Hello"], [0], 0, true],
+		[["Hello", "World"], [1], 0, false],
+		[["alpha", "bravo", "charlie", "delta"], [0,1,2,3], 3, true],
+		[["alpha", "bravo", "charlie", "delta"], [0,1,2], 3, false],
+	];
+	
+	func test_cases(params = use_parameters(cases)):
+		
+		var source := params[0] as Array;
+		var sequence := (params[1] as Array).map(func(i): return source[i]);
+		var element_to_look_for = source[params[2]];
+		var expected_return_value := params[3] as bool;
+		
+		var MockedIterator = double(Iterator);
+		var mock = MockedIterator.new();
+		stub(mock, &"_iter_init").to_call(func(iter): iter[0] = 0; return iter[0] < len(sequence));
+		stub(mock, &"_iter_next").to_call(func(iter): iter[0] += 1; return iter[0] < len(sequence));
+		stub(mock, &"_iter_get").to_call(func(iter): return sequence[iter]);
+		var subject := ChainedIterator.new(mock);
+		
+		var result := subject.contains(element_to_look_for);
+		
+		assert_eq(result, expected_return_value);
+
 class TestCount extends GutTest:
 	
 	const without_callback_cases := [
