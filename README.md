@@ -475,6 +475,36 @@ for e in source.select_many(func(e): return e):
 8
 ```
 
+### `skip(…)`
+```gdscript
+func skip(number_of_elements: int) -> Iterator
+```
+
+Creates a new [`Iterator`] that contains elements from its source except a number of elements from the start equal to `number_to_skip`. The resulting sequence will be empty if `number_to_skip` is equal to, or greater than, the number of elements in the source.
+
+#### Parameters
+
+<dl>
+<dt><dfn>number_to_skip</dfn></dt>
+<dd>
+
+Number of elements at the start of the source to ignore.
+</dd>
+</dl>
+
+#### Example
+
+```gdscript
+var source := Iterator.from([1, 1, 2, 3, 5, 8, 13])
+for e in source.skip(4):
+  print(e)
+```
+```
+5
+8
+13
+```
+
 ### `sum(…)`
 ```gdscript
 func sum() -> Variant
