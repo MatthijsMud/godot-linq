@@ -1,4 +1,8 @@
-# Iterator
+#  Iterator
+
+<p align="center">
+<img src="logo.svg" width="100" height="100"/>
+</p>
 
 Represents the concept of a sequence which can be transformed and iterated lazily.
 
@@ -180,6 +184,7 @@ Callback which should return `true` if `left` and `right` are considered equal (
 If this value is omitted, `is_same` is used to determine whether the provided `value` is in the sequence.
 </dd>
 </dl>
+
 
 ### `count(…)`
 ```gdscript
@@ -470,6 +475,27 @@ for e in source.select_many(func(e): return e):
 8
 ```
 
+### `sum(…)`
+```gdscript
+func sum() -> Variant
+func sum(selector: Callable) -> Variant
+```
+
+Calculates the sum of all elements in the sequence.
+
+#### Parameters
+
+<dl>
+<dt><dfn>selector</dfn></dt>
+<dd>
+
+```gdscript
+func selector(element: Variant) -> Variant
+```
+Callback which returns either an `int`, `float` or the value `null`. Any other type is considered an error.
+</dd>
+</dl>
+
 ### `where(…)`
 ```gdscript
 func where(predicate: Callable) -> Iterator
@@ -551,7 +577,9 @@ Note that `4` and `5` are not iterated, as the `other` source has no more elemen
 [`Array.all`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-all
 [`Array.any`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-any
 [`Array.count`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-count
+[`Array.fill`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-fill
 [`Array.reduce`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-reduce
+[`Array.resize`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-resize
 [`Array.map`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-map
 [`Array.filter`]: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-filter
 
