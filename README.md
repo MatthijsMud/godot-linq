@@ -496,6 +496,37 @@ Callback which returns either an `int`, `float` or the value `null`. Any other t
 </dd>
 </dl>
 
+### `take(…)`
+```gdscript
+func take(number_to_take: int) -> Iterator
+```
+Creates a new [`Iterator`] that contains a number of elements from the start of its source, but no more than `number_to_take`. If the source contains fewer elements, the sequence is equivalent.
+
+#### Parameters
+
+<dl>
+<dt><dfn>number_to_take</dfn></dt>
+<dd>
+
+Maximum number of elements from the start of the source to include in this [`Iterator`].
+</dd>
+</dl>
+
+#### Example
+
+```gdscript
+var source := Iterator.from([1, 1, 2, 3, 5, 8, 13])
+for e in source.take(4):
+  print(e)
+```
+```
+1
+1
+2
+3
+```
+
+
 ### `where(…)`
 ```gdscript
 func where(predicate: Callable) -> Iterator

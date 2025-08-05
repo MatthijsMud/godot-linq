@@ -217,6 +217,16 @@ func sum(selector: Callable = UNDEFINED) -> Variant:
 			return null;
 
 	return total;
+
+## Creates a new [Iterator] that contains a number of elements from the start of
+## its source, but no more than [param number_to_take]. If the source contains 
+## fewer elements, the sequence is equivalent.[br][br]
+## 
+## [param number_to_take] Maximum number of elements from the start of the 
+## source to include in this [Iterator].
+func take(number_to_take) -> TakeIterator:
+	return TakeIterator.new(self, number_to_take);
+
 func where(predicate: Callable) -> WhereIterator:
 	return WhereIterator.new(self, predicate);
 
