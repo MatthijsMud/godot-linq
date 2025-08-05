@@ -172,6 +172,16 @@ func select(selector: Callable) -> SelectIterator:
 func select_many(collection_selector: Callable, result_selector: Callable = UNDEFINED) -> SelectManyIterator:
 	return SelectManyIterator.new(self, collection_selector, result_selector);
 
+## Creates a new [Iterator] that contains elements from its source except a 
+## number of elements from the start equal to [param number_to_skip]. 
+## The resulting sequence will be empty if [param number_to_skip] is equal to, 
+## or greater than, the number of elements in the source.[br][br]
+##
+## [param number_to_skip] indicates how many elements at the start of the source
+## should be ignored.
+func skip(number_to_skip: int) -> Iterator:
+	return SkipIterator.new(self, number_to_skip);
+
 ## Calculates the sum of the elements in this sequence.[br][br]
 ##
 ## Note that this method returns [code]null[/code] if the sequence is empty.
