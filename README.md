@@ -508,7 +508,7 @@ Creates a new [`Iterator`] that contains a number of elements from the start of 
 <dt><dfn>number_to_take</dfn></dt>
 <dd>
 
-Maximum number of elements to 
+Maximum number of elements from the start of the source to include in this [`Iterator`].
 </dd>
 </dl>
 
