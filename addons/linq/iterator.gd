@@ -171,6 +171,14 @@ func first_or_default(predicate_or_default: Variant = UNDEFINED, default: Varian
 			return element;
 	
 	return default;
+
+## Creates a new [Iterator] which only contains the elements of its source that 
+## are of the specified [param type].[br][br]
+##
+## [param type] Must be either [enum Variant.Type], [StringName] or [Script].
+func of_type(type: Variant) -> OfTypeIterator:
+	return OfTypeIterator.new(self, type);
+	
 ## Creates a new [Iterator] where each value is the result of calling [param selector]
 ## with the corresponding element in the source (and optionally its index).[br][br]
 ##
