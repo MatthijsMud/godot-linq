@@ -172,6 +172,51 @@ func select(selector: Callable) -> SelectIterator:
 func select_many(collection_selector: Callable, result_selector: Callable = UNDEFINED) -> SelectManyIterator:
 	return SelectManyIterator.new(self, collection_selector, result_selector);
 
+## Calculates the sum of the elements in this sequence.[br][br]
+##
+## Note that this method returns [code]null[/code] if the sequence is empty.
+func sum(selector: Callable = UNDEFINED) -> Variant:
+	
+	var iter := [null];
+	if not _iter_init(iter):
+		return null;
+		
+	if is_same(selector, UNDEFINED):
+		selector = func(e): return e;
+	
+	var add: Callable = func(left: Variant, right: Variant) -> Variant:
+		match [typeof(left), typeof(right)]:
+			[TYPE_FLOAT, TYPE_FLOAT],\
+			[TYPE_FLOAT, TYPE_INT],\
+			[TYPE_INT, TYPE_FLOAT],\
+			[TYPE_INT, TYPE_INT]:
+				return left + right;
+			[TYPE_FLOAT, TYPE_NIL],\
+			[TYPE_INT, TYPE_NIL]:
+				return left;
+			[TYPE_NIL, TYPE_FLOAT],\
+			[TYPE_NIL, TYPE_INT]:
+				return right;
+			[TYPE_NIL, TYPE_NIL]:
+				return null;
+		return UNDEFINED;
+	
+	# Sum supports adding either [int] or [float] values.
+	var total: Variant = selector.call(_iter_get(iter[0]));
+	var left: Variant = null;
+	var right: Variant = null;
+	while(_iter_next(iter)):
+		left = total;
+		right = selector.call(_iter_get(iter[0]));
+		total = add.call(left, right);
+		if is_same(total, UNDEFINED):
+			push_error("[Iterator] cannot sum elements of type [{left}] and [{right}]".format({
+				"left": type_string(typeof(left)),
+				"right": type_string(typeof(right))
+			}))
+			return null;
+
+	return total;
 func where(predicate: Callable) -> WhereIterator:
 	return WhereIterator.new(self, predicate);
 

@@ -242,3 +242,50 @@ class TestFirstOrDefault extends GutTest:
 		
 		assert_eq(result, expected_return_value);
 		assert_call_count(mock, &"_default", 0);
+
+class TestSum extends GutTest:
+	const cases_without_selector := [
+		[[], null],
+		[[0], 0],
+		[[0,1,2,3,4], 10],
+	];
+	
+	func test_sum_without_selector(params = use_parameters(cases_without_selector)):
+		var sequence := params[0] as Array;
+		var expected_return_value: Variant = params[1];
+		
+		var MockedIterator = double(Iterator);
+		var mock = MockedIterator.new();
+		stub(mock, &"_iter_init").to_call(func(iter): iter[0] = 0; return iter[0] < len(sequence));
+		stub(mock, &"_iter_next").to_call(func(iter): iter[0] += 1; return iter[0] < len(sequence));
+		stub(mock, &"_iter_get").to_call(func(iter): return sequence[iter]);
+		var subject := ChainedIterator.new(mock);
+		
+		var result = subject.sum();
+		
+		assert_eq(result, expected_return_value);
+		assert_call_count(mock, &"_iter_get", len(sequence));
+	
+	const cases_with_selector := [
+		[[], null],
+		[[0], 0],
+		[[0,1,2,3,4], 30],
+	]
+	
+	func test_sum_with_selector(params = use_parameters(cases_with_selector)):
+		var sequence := params[0] as Array;
+		var expected_return_value: Variant = params[1];
+		
+		var MockedIterator = double(Iterator);
+		var mock = MockedIterator.new();
+		stub(mock, &"_iter_init").to_call(func(iter): iter[0] = 0; return iter[0] < len(sequence));
+		stub(mock, &"_iter_next").to_call(func(iter): iter[0] += 1; return iter[0] < len(sequence));
+		stub(mock, &"_iter_get").to_call(func(iter): return sequence[iter]);
+		var subject := ChainedIterator.new(mock);
+		var selector := func(e): 
+			return e * e;
+		
+		var result = subject.sum(selector);
+		
+		assert_eq(result, expected_return_value);
+		assert_call_count(mock, &"_iter_get", len(sequence));
