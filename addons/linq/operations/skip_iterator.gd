@@ -15,4 +15,5 @@ func _iter_init(iter: Array) -> bool:
 	var source_has_elements := _source._iter_init(iter);
 	while number_skipped < _number_to_skip and source_has_elements:
 		source_has_elements = _source._iter_next(iter);
+		number_skipped += 1;
 	return source_has_elements;
